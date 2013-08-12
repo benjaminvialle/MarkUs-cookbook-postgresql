@@ -16,11 +16,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 case node['platform']
 when "debian"
 
   case
+  when node['platform_version'] == "jessie/sid" # Next Debian release
+    default['postgresql']['version'] = "9.1"
   when node['platform_version'].to_f < 6.0 # All 5.X
     default['postgresql']['version'] = "8.3"
   when node['platform_version'].to_f < 7.0 # All 6.X
@@ -31,6 +32,8 @@ when "debian"
 
   default['postgresql']['dir'] = "/etc/postgresql/#{node['postgresql']['version']}/main"
   case
+  when node['platform_version'] == "jessie/sid" # Next Debian release
+    default['postgresql']['server']['service_name'] = "postgresql"
   when node['platform_version'].to_f < 6.0 # All 5.X
     default['postgresql']['server']['service_name'] = "postgresql-#{node['postgresql']['version']}"
   else

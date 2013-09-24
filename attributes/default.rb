@@ -21,7 +21,7 @@ when "debian"
 
   case
   when node['platform_version'] == "jessie/sid" # Next Debian release
-    default['postgresql']['version'] = "9.1"
+    default['postgresql']['version'] = "9.3"
   when node['platform_version'].to_f < 6.0 # All 5.X
     default['postgresql']['version'] = "8.3"
   when node['platform_version'].to_f < 7.0 # All 6.X

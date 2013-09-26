@@ -83,8 +83,14 @@ when "fedora"
 
 when "amazon"
 
-  default['postgresql']['version'] = "8.4"
-  default['postgresql']['dir'] = "/var/lib/pgsql/data"
+  if node['platform_version'].to_f >= 2012.03
+    default['postgresql']['version'] = "9.0"
+    default['postgresql']['dir'] = "/var/lib/pgsql9/data"
+  else
+    default['postgresql']['version'] = "8.4"
+    default['postgresql']['dir'] = "/var/lib/pgsql/data"
+  end
+
   default['postgresql']['client']['packages'] = %w{postgresql-devel}
   default['postgresql']['server']['packages'] = %w{postgresql-server}
   default['postgresql']['contrib']['packages'] = %w{postgresql-contrib}
@@ -150,7 +156,8 @@ when 'debian'
   default['postgresql']['config']['listen_addresses'] = 'localhost'
   default['postgresql']['config']['port'] = 5432
   default['postgresql']['config']['max_connections'] = 100
-  default['postgresql']['config']['unix_socket_directory'] = '/var/run/postgresql'
+  default['postgresql']['config']['unix_socket_directory'] = '/var/run/postgresql' if node['postgresql']['version'].to_f < 9.3
+  default['postgresql']['config']['unix_socket_directories'] = '/var/run/postgresql' if node['postgresql']['version'].to_f >= 9.3
   default['postgresql']['config']['shared_buffers'] = '24MB'
   default['postgresql']['config']['max_fsm_pages'] = 153600 if node['postgresql']['version'].to_f < 8.4
   default['postgresql']['config']['log_line_prefix'] = '%t '

@@ -72,11 +72,11 @@ generated from attributes. Each key in `node['postgresql']['config']`
 is a postgresql configuration directive, and will be rendered in the
 config file. For example, the attribute:
 
-    node['postgresql']['config']['listen_address'] = 'localhost'
+    node['postgresql']['config']['listen_addresses'] = 'localhost'
 
 Will result in the following line in the `postgresql.conf` file:
 
-    listen_address = 'localhost'
+    listen_addresses = 'localhost'
 
 The attributes file contains default values for Debian and RHEL
 platform families (per the `node['platform_family']`). These defaults
@@ -109,6 +109,11 @@ Will result in the following config lines:
     port = 5432
 
 (no line printed for `ident_file` as it is `nil`)
+
+Note that the `unix_socket_directory` configuration was renamed to
+`unix_socket_directories` in Postgres 9.3 so make sure to use the
+`node['postgresql']['unix_socket_directories']` attribute instead of
+`node['postgresql']['unix_socket_directory']`.
 
 The `pg_hba.conf` file is dynamically generated from the
 `node['postgresql']['pg_hba']` attribute. This attribute must be an
@@ -300,7 +305,7 @@ analysis utilities, and plug-in features that database engineers often
 require. Some (like `pgbench`) are executable. Others (like
 `pg_buffercache`) would need to be installed into the database.
 
-Also installs any contrib module extensions defined in the 
+Also installs any contrib module extensions defined in the
 `node['postgresql']['contrib']['extensions']` attribute. These will be
 available in any subsequently created databases in the cluster, because
 they will be installed into the `template1` database using the
